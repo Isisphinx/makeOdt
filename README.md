@@ -1,5 +1,5 @@
 # makeOdt
 makeOdt [options] xmlFile odtTemplate outputFile
 
--open
+-open\
 open file after creation
