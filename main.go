@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"io"
 	"log"
 	"os"
@@ -36,19 +35,21 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(dir)
 	flag.Parse()
 	args := flag.Args()
 	xmlFile := args[0]
 	template := args[1]
 	outputFile := args[2]
-	zip := exec.Command(dir+"\\7za", "a", template, xmlFile)
-	if err := zip.Run(); err != nil {
-		panic(err)
-	}
+
 	if err := copy(template, outputFile); err != nil {
 		panic(err)
 	}
+
+	zip := exec.Command(dir+"\\7za", "a", outputFile, xmlFile, "-x!*/")
+	if err := zip.Run(); err != nil {
+		panic(err)
+	}
+
 	if *open {
 		cmd := exec.Command("rundll32.exe", "url.dll,FileProtocolHandler", outputFile)
 		if err := cmd.Run(); err != nil {
