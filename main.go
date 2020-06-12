@@ -2,9 +2,12 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"io"
+	"log"
 	"os"
 	"os/exec"
+	"path/filepath"
 )
 
 func copy(src, dst string) error {
@@ -28,12 +31,18 @@ func copy(src, dst string) error {
 
 func main() {
 	open := flag.Bool("open", false, "Open the file after creation")
+
+	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(dir)
 	flag.Parse()
 	args := flag.Args()
 	xmlFile := args[0]
 	template := args[1]
 	outputFile := args[2]
-	zip := exec.Command("7za", "a", template, xmlFile)
+	zip := exec.Command(dir+"\\7za", "a", template, xmlFile)
 	if err := zip.Run(); err != nil {
 		panic(err)
 	}
